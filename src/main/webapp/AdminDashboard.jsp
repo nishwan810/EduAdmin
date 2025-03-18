@@ -1,3 +1,11 @@
+<%@page import="com.engisphere.dao.StaffDao"%>
+<%@page import="com.engisphere.dao.DatabaseConnection"%>
+<%@page import="com.engisphere.dao.StudentDao"%>
+<%@page import="com.engisphere.entity.StudentsEntities"%>
+<%@page import="com.engisphere.entity.StaffEntities"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -9,6 +17,8 @@
 <%@include file="bootstrapSupport.jsp"%>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -60,162 +70,214 @@ body {
 	margin-bottom: 15px;
 }
 
-.grid {
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
-	gap: 5px;
+.present {
+	color: green;
 }
 
-.grid div {
-	width: 100%;
-	height: 25px;
-	background: #ddd;
-	border-radius: 3px;
-}
-
-.grid div.top {
-	background: #555;
-}
-
-.courses {
-	margin-top: 20px;
-	background: white;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.courses ul {
-	columns: 4;
-	list-style: none;
-	padding: 0;
-}
-
-.courses ul li {
-	font-size: 16px;
-	margin-bottom: 5px;
+.absent {
+	color: red;
 }
 </style>
 </head>
 <body>
-
 	<%@include file="AdminNavBar.jsp"%>
 
 	<main>
 		<div class="container mt-4">
-			<h1 class="dashboard-title">EduAdmin</h1>
+			<h1 class="dashboard-title">EduAdmin Dashboard</h1>
 
-			<h3 class="mt-3 text-primary">Dashboard</h3>
+			<h3 class="mt-3 text-primary">Overview</h3>
 			<hr>
 
-			<!-- Statistics Section -->
+			<%
+			StudentDao sdao = new StudentDao(DatabaseConnection.connect());
+			int totalStudents = sdao.TotalStudents();
+			StaffDao sdao1 = new StaffDao(DatabaseConnection.connect());
+			int totalTeacher = sdao1.getTotalTeachers();
+			int totalAccountant = sdao1.getTotalAccountant();
+			int totalStaff = totalAccountant + totalTeacher;
+
+			// Fetch attendance data
+			String currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+			List<Map<String, String>> studentAttendance = sdao.getStudentAttendance(currentDate);
+			List<Map<String, String>> staffAttendance = sdao1.getStaffAttendance(currentDate);
+
+			int totalPresentStudents = 0;
+			int totalAbsentStudents = 0;
+			int totalPresentStaff = 0;
+			int totalAbsentStaff = 0;
+
+			for (Map<String, String> attendance : studentAttendance) {
+				if ("Present".equals(attendance.get("status"))) {
+					totalPresentStudents++;
+				} else {
+					totalAbsentStudents++;
+				}
+			}
+
+			for (Map<String, String> attendance : staffAttendance) {
+				if ("Present".equals(attendance.get("status"))) {
+					totalPresentStaff++;
+				} else {
+					totalAbsentStaff++;
+				}
+			}
+			%>
+
+
 			<div class="row text-center">
-				<div class="col-lg-3 col-md-6">
+				<div class="col-lg-3 col-md-6 mb-3">
 					<div class="stats-box">
-						<h2>280</h2>
+						<h2><%=totalStudents%></h2>
 						<p>Total Students</p>
 					</div>
 				</div>
-				<div class="col-lg-3 col-md-6">
+				<div class="col-lg-3 col-md-6 mb-3">
 					<div class="stats-box">
-						<h2>30</h2>
+						<h2><%=totalTeacher%></h2>
+						<p>Total Teachers</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 mb-3">
+					<div class="stats-box">
+						<h2><%=totalAccountant%></h2>
+						<p>Accountants</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 mb-3">
+					<div class="stats-box">
+						<h2><%=totalStaff%></h2>
 						<p>Total Staff</p>
 					</div>
 				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="stats-box">
-						<h2>5</h2>
-						<p>Accountant</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="stats-box">
-						<h2>+</h2>
-						<p>Add User</p>
-					</div>
-				</div>
 			</div>
+
 			<h3 class="mt-4">
 				Attendance <span id="currentDate" class="text-muted"
 					style="font-size: 18px;"></span>
 			</h3>
 			<script>
-				// JavaScript to insert the current date
+				// current date
 				document.getElementById("currentDate").textContent = new Date()
 						.toLocaleDateString();
 			</script>
 			<br>
 			<hr>
 
+			<!-- Mark Attendance Button -->
+			<div class="text-end mb-4">
+				<a href="markAttendance.jsp" class="btn btn-primary">Mark
+					Attendance</a>
+			</div>
+
 			<!-- Attendance Section -->
 			<div class="attendance-container">
+				<!-- Staff Attendance -->
 				<div class="attendance-table">
-					<h4>Staffs</h4>
-					<div class="grid">
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
+					<h4>Staff Attendance</h4>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Job Profession</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%
+							for (Map<String, String> attendance : staffAttendance) {
+							%>
+							<tr>
+								<td><%=attendance.get("firstName")%> <%=attendance.get("lastName")%></td>
+								<td><%=attendance.get("jobProfession")%></td>
+								<td>
+									<%
+									if ("Present".equals(attendance.get("status"))) {
+									%> <i class="fas fa-check-circle present"></i> <%
+ } else {
+ %> <i class="fas fa-times-circle absent"></i> <%
+ }
+ %>
+								</td>
+							</tr>
+							<%
+							}
+							%>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Student Attendance -->
+				<div class="attendance-table">
+					<h4>Student Attendance</h4>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Course</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%
+							for (Map<String, String> attendance : studentAttendance) {
+							%>
+							<tr>
+								<td><%=attendance.get("firstName")%> <%=attendance.get("lastName")%></td>
+								<td><%=attendance.get("course")%></td>
+								<td>
+									<%
+									if ("Present".equals(attendance.get("status"))) {
+									%> <i class="fas fa-check-circle present"></i> <%
+ } else {
+ %> <i class="fas fa-times-circle absent"></i> <%
+ }
+ %>
+								</td>
+							</tr>
+							<%
+							}
+							%>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Total Present and Absent -->
+			<div class="row mt-4">
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="present"><%=totalPresentStudents%></h2>
+						<p>Present Students</p>
 					</div>
 				</div>
-				<div class="attendance-table">
-					<h4>Students</h4>
-					<div class="grid">
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div class="top"></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="absent"><%=totalAbsentStudents%></h2>
+						<p>Absent Students</p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="present"><%=totalPresentStaff%></h2>
+						<p>Present Staff</p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="absent"><%=totalAbsentStaff%></h2>
+						<p>Absent Staff</p>
 					</div>
 				</div>
 			</div>
 
-			<h3 class="mt-4">Courses</h3>
-			<hr>
-
 			<!-- Courses Section -->
-			<div class="courses">
-				<ul>
-					<li>FY CS 2028</li>
+			<div class="courses mt-4">
+				<h3>Courses</h3>
+				<hr>
+				<ul class="list-unstyled">
+					<li> <a
+						href="https://www.shiksha.com/college/sinhgad-college-of-engineering-vadgaon-budruk-pune-52071/course-b-e-in-computer-engineering-278764">B.E. in Computer Engineering </a></li>
 					<li>FY ENTC 2028</li>
 					<li>FY CHEM 2028</li>
 					<li>SY CS 2027</li>
@@ -231,18 +293,10 @@ body {
 					<li>B.TECH ENTC 2025</li>
 					<li>B.TECH CHEM 2025</li>
 					<li>FY MECH 2028</li>
-
 				</ul>
 			</div>
-
 		</div>
-
 	</main>
-	<!-- Bootstrap JS -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

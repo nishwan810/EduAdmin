@@ -49,30 +49,34 @@ body {
 
 	<div class="container mt-5">
 		<div class="form-container mx-auto">
-			<h4 class="text-center text-white bg-success py-2 rounded">Edit Student</h4>
-				<%
-					int id = Integer.parseInt(request.getParameter("id"));
-				StudentDao sdao = new StudentDao(DatabaseConnection.connect());
-				StudentsEntities s1= sdao.getStudentById(id);
-				%>
-				
-				
+			<h4 class="text-center text-white bg-success py-2 rounded">Edit
+				Student</h4>
+			<%
+			int id = Integer.parseInt(request.getParameter("id"));
+			StudentDao sdao = new StudentDao(DatabaseConnection.connect());
+			StudentsEntities s1 = sdao.getStudentById(id);
+			%>
+
+
 			<form action="EditStudentController" method="post">
-		    <input type="hidden" name="id" value="<%= s1.getId() %>">
+				<input type="hidden" name="id" value="<%=s1.getId()%>">
 				<div class="row">
 					<!-- First Column -->
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>First Name</label> <input type="text" class="form-control"
-								name="firstName" required tabindex="1" value="<%=s1.getFirstName() %>">
+								name="firstName" required tabindex="1"
+								value="<%=s1.getFirstName()%>">
 						</div>
 						<div class="form-group">
 							<label>Last Name</label> <input type="text" class="form-control"
-								name="lastName" required tabindex="2" value="<%=s1.getLastName() %>" >
+								name="lastName" required tabindex="2"
+								value="<%=s1.getLastName()%>">
 						</div>
 						<div class="form-group">
 							<label>Contact</label> <input type="text" class="form-control"
-								name="contact" required tabindex="3" value="<%=s1.getContact()%>">
+								name="contact" required tabindex="3"
+								value="<%=s1.getContact()%>">
 						</div>
 						<div class="form-group">
 							<label>Email</label> <input type="email" class="form-control"
@@ -84,18 +88,20 @@ body {
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Address</label> <input type="text" class="form-control"
-								name="address" tabindex="5" value="<%=s1.getAddress() %>">
+								name="address" tabindex="5" value="<%=s1.getAddress()%>">
 						</div>
 						<div class="form-group">
 							<label>Password</label> <input type="password"
-								class="form-control" name="password" required tabindex="6" value="<%=s1.getPassword()%>" >
+								class="form-control" name="password" required tabindex="6"
+								value="<%=s1.getPassword()%>">
 						</div>
 						<div class="form-group">
 							<label>Joining Date</label> <input type="date"
-								class="form-control" name="joiningDate" tabindex="7" value="<%=s1.getJoiningDate()%>" >
+								class="form-control" name="joiningDate" tabindex="7"
+								value="<%=s1.getJoiningDate()%>">
 						</div>
 						<div class="form-group">
-							<label>Course</label> <select class="form-control" name="course" 
+							<label>Course</label> <select class="form-control" name="course"
 								tabindex="8">
 								<option>Select Branch</option>
 								<option>BioTech</option>

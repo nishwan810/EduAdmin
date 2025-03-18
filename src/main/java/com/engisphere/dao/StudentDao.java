@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.engisphere.entity.StudentsEntities;
 
@@ -80,10 +83,10 @@ public class StudentDao {
 
 
 	public StudentsEntities getStudentById(int id ){
-		
-		
+
+
 		StudentsEntities s1 = new StudentsEntities();
-		
+
 		System.out.println("IN getStudentById(int id )");
 		System.out.println(s1);
 
@@ -120,8 +123,10 @@ public class StudentDao {
 		return s1;	
 	}
 
+	//Update one student
+
 	public boolean UpdateOneStudent(StudentsEntities s1) {
-		
+
 		System.out.println("IN Update One Student s1 ovject");
 		System.out.println(s1);
 		boolean status = false;
@@ -137,7 +142,7 @@ public class StudentDao {
 			pstmt.setString(6, s1.getPassword());
 			pstmt.setString(7, s1.getJoiningDate());
 			pstmt.setString(8, s1.getCourse());
-			pstmt.setInt(9, s1.getId()); // Add this line for the WHERE condition
+			pstmt.setInt(9, s1.getId()); 
 
 
 			int result = pstmt.executeUpdate();
@@ -155,66 +160,102 @@ public class StudentDao {
 		return status;
 	}
 
+
+	//Delete Student by id
+
 	public boolean DeleteStudentById(int id) {
-	    boolean status = false;
-	    String query = "DELETE FROM studentdata WHERE id = ?";
+		boolean status = false;
+		String query = "DELETE FROM studentdata WHERE id = ?";
 
-	    // Validate ID before executing query
-	    if (id <= 0) {
-	        return false;
-	    }
+		if (id <= 0) {
+			return false;
+		}
 
-	    try {
-	        PreparedStatement pstmt = con.prepareStatement(query);
-	        pstmt.setInt(1, id);
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setInt(1, id);
 
-	        int n = pstmt.executeUpdate();
-	        if (n == 1) {
-	            status = true;
-	        }
-	        
-	        con.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+			int n = pstmt.executeUpdate();
+			if (n == 1) {
+				status = true;
+			}
 
-	    return status; 
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return status; 
 	}
 
 
+	// Finding total student in Table
+
+	public int TotalStudents() {
+		int totalStud = 0;
+		String query = "SELECT COUNT(*) FROM studentdata"; 
+
+		try (
+				PreparedStatement pstmt = con.prepareStatement(query);
+
+				ResultSet rs = pstmt.executeQuery()) { 
+
+			if (rs.next()) {
+				totalStud = rs.getInt(1);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace(); // Handle the exception
+		}
+
+		System.out.println("Total students in table is: " + totalStud);
+		return totalStud;
+	}
+
+	// In StudentDao
 
 
+	public boolean markStudentAttendance(int studentId, String date, String status) {
+		boolean result = false;
+		String query = "INSERT INTO student_attendance (student_id, attendance_date, status) VALUES (?, ?, ?)";
 
+		try (PreparedStatement pstmt = con.prepareStatement(query)) {
+			pstmt.setInt(1, studentId);
+			pstmt.setString(2, date);
+			pstmt.setString(3, status);
 
+			int rows = pstmt.executeUpdate();
+			if (rows > 0) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
+	public List<Map<String, String>> getStudentAttendance(String date) {
+		List<Map<String, String>> attendanceList = new ArrayList<>();
+		String query = "SELECT s.firstName, s.lastName, s.course, sa.status " +
+				"FROM student_attendance sa " +
+				"JOIN studentdata s ON sa.student_id = s.id " +
+				"WHERE sa.attendance_date = ?";
 
+		try (PreparedStatement pstmt = con.prepareStatement(query)) {
+			pstmt.setString(1, date);
+			ResultSet rs = pstmt.executeQuery();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			while (rs.next()) {
+				Map<String, String> attendance = new HashMap<>();
+				attendance.put("firstName", rs.getString("firstName"));
+				attendance.put("lastName", rs.getString("lastName"));
+				attendance.put("course", rs.getString("course"));
+				attendance.put("status", rs.getString("status"));
+				attendanceList.add(attendance);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return attendanceList;
+	}
 }

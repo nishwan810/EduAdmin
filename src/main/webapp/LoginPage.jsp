@@ -74,7 +74,7 @@ body {
 	<!-- Navbar Section -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-success">
 		<div class="container">
-			<a class="navbar-brand" href="index.jsp" >EngiSphere</a>
+			<a class="navbar-brand" href="index.jsp">EngiSphere</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarNav" aria-controls="navbarNav"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -131,8 +131,7 @@ body {
 								</div>
 
 								<div class="form-group mt-4">
-									<label for="userType">USER TYPE</label> 
-									<select
+									<label for="userType">USER TYPE</label> <select
 										class="form-control" id="userType" name="userType">
 										<option value="">Select</option>
 										<option value="Admin">Admin</option>
@@ -140,8 +139,8 @@ body {
 										<option value="Student">Student</option>
 									</select>
 								</div>
-							
-								
+
+
 
 								<%
 								String errorMessage = (String) request.getAttribute("errorMessage");
