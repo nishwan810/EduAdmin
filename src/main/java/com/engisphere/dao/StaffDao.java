@@ -53,8 +53,7 @@ public class StaffDao {
 		String query = "SELECT * FROM staffdata";
 		System.out.println("Inside getAllStaff");
 
-		try (PreparedStatement pstmt = con.prepareStatement(query);
-				ResultSet rs = pstmt.executeQuery()) {
+		try (PreparedStatement pstmt = con.prepareStatement(query); ResultSet rs = pstmt.executeQuery()) {
 
 			System.out.println("Inside getAllStaff -> Try block");
 
@@ -62,15 +61,16 @@ public class StaffDao {
 				StaffEntities staff = new StaffEntities(
 						rs.getInt("id"),
 						rs.getString("firstName"),
-						rs.getString("lastName"),
-						rs.getString("contact"),
+						rs.getString("lastName"), 
+						rs.getString("contact"), 
 						rs.getString("address"),
-						rs.getString("email"),
-						rs.getString("password"),
+						rs.getString("email"), 
+						rs.getString("password"), 
 						rs.getString("joiningDate"),
-						rs.getString("jobProfession"),
-						rs.getString("salary"),
+						rs.getString("jobProfession"), 
+						rs.getString("salary"), 
 						rs.getString("work")
+						
 						);
 				staffList.add(staff);
 			}
@@ -80,21 +80,21 @@ public class StaffDao {
 		return staffList;
 	}
 
-	//    GetTeacher
+	// GetTeacher
 
 	public int getTotalTeachers() {
 		int totalTeachers = 0;
 		String query = "SELECT COUNT(*) AS total_teachers FROM staffdata WHERE jobProfession = ?";
 
 		try (PreparedStatement pstmt = con.prepareStatement(query)) {
-			pstmt.setString(1, "Teacher"); 
+			pstmt.setString(1, "Teacher");
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					totalTeachers = rs.getInt("total_teachers"); 
+					totalTeachers = rs.getInt("total_teachers");
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		}
 
 		System.out.println("Total teachers in the staff table: " + totalTeachers);
@@ -107,20 +107,19 @@ public class StaffDao {
 		String query = "SELECT COUNT(*) AS total_Accountant FROM staffdata WHERE jobProfession = ?";
 
 		try (PreparedStatement pstmt = con.prepareStatement(query)) {
-			pstmt.setString(1, "Accountant"); 
+			pstmt.setString(1, "Accountant");
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					totalAccountant = rs.getInt("total_Accountant"); 
+					totalAccountant = rs.getInt("total_Accountant");
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		}
 
 		System.out.println("total Accountant in the staff table: " + totalAccountant);
 		return totalAccountant;
 	}
-
 
 	// staff Attendance
 
@@ -145,10 +144,8 @@ public class StaffDao {
 
 	public List<Map<String, String>> getStaffAttendance(String date) {
 		List<Map<String, String>> attendanceList = new ArrayList<>();
-		String query = "SELECT s.firstName, s.lastName, s.jobProfession, sa.status " +
-				"FROM staff_attendance sa " +
-				"JOIN staffdata s ON sa.staff_id = s.id " +
-				"WHERE sa.attendance_date = ?";
+		String query = "SELECT s.firstName, s.lastName, s.jobProfession, sa.status " + "FROM staff_attendance sa "
+				+ "JOIN staffdata s ON sa.staff_id = s.id " + "WHERE sa.attendance_date = ?";
 
 		try (PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setString(1, date);
@@ -166,7 +163,38 @@ public class StaffDao {
 			e.printStackTrace();
 		}
 		return attendanceList;
-	} 
+	}
+
+
+	public StaffEntities getStaffById(int id) { 
+		StaffEntities teacher = null; 
+		
+	try
+	{ String query = "SELECT * FROM staffdata WHERE id=?"; 
+	PreparedStatement ps =con.prepareStatement(query);
+	ps.setInt(1, id);
+	ResultSet rs =ps.executeQuery(); 
+	if(rs.next()) { 
+		teacher = new StaffEntities(
+				rs.getInt("id"),
+				rs.getString("firstName"),
+				rs.getString("lastName"), 
+				rs.getString("contact"), 
+				rs.getString("address"),
+				rs.getString("email"), 
+				rs.getString("password"), 
+				rs.getString("joiningDate"),
+				rs.getString("jobProfession"), 
+				rs.getString("salary"), 
+				rs.getString("work")
+
+
+			); }
+
+	}catch (Exception e) { e.printStackTrace(); }
+
+	return teacher; }
+
 
 
 }

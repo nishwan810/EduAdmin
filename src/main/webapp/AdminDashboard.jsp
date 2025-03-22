@@ -244,40 +244,42 @@ body {
 			</div>
 
 			<!-- Total Present and Absent -->
-			<div class="row mt-4">
-				<div class="col-md-3">
-					<div class="stats-box">
-						<h2 class="present"><%=totalPresentStudents%></h2>
-						<p>Present Students</p>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="stats-box">
-						<h2 class="absent"><%=totalAbsentStudents%></h2>
-						<p>Absent Students</p>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="stats-box">
-						<h2 class="present"><%=totalPresentStaff%></h2>
-						<p>Present Staff</p>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="stats-box">
-						<h2 class="absent"><%=totalAbsentStaff%></h2>
-						<p>Absent Staff</p>
-					</div>
-				</div>
-			</div>
+		<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="stats-box">
+            <h2 class="present"><%=totalPresentStaff%></h2>
+            <p>Present Staff</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-box">
+            <h2 class="absent"><%=totalAbsentStaff%></h2>
+            <p>Absent Staff</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-box">
+            <h2 class="present"><%=totalPresentStudents%></h2>
+            <p>Present Students</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-box">
+            <h2 class="absent"><%=totalAbsentStudents%></h2>
+            <p>Absent Students</p>
+        </div>
+    </div>
+</div>
+
 
 			<!-- Courses Section -->
 			<div class="courses mt-4">
 				<h3>Courses</h3>
 				<hr>
 				<ul class="list-unstyled">
-					<li> <a
-						href="https://www.shiksha.com/college/sinhgad-college-of-engineering-vadgaon-budruk-pune-52071/course-b-e-in-computer-engineering-278764">B.E. in Computer Engineering </a></li>
+					<li><a
+						href="https://www.shiksha.com/college/sinhgad-college-of-engineering-vadgaon-budruk-pune-52071/course-b-e-in-computer-engineering-278764">B.E.
+							in Computer Engineering </a></li>
 					<li>FY ENTC 2028</li>
 					<li>FY CHEM 2028</li>
 					<li>SY CS 2027</li>
