@@ -18,12 +18,10 @@ public class CollectFeeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            // Get database connection
-            Connection conn = DatabaseConnection.connect();
+        try (Connection conn = DatabaseConnection.connect()) { // Auto-closing connection
             FeeDao feeDao = new FeeDao(conn);
 
-            // Get form data from CollectFee.jsp
+            // Validate and parse form inputs
             int studentId = Integer.parseInt(request.getParameter("studentId"));
             double amount = Double.parseDouble(request.getParameter("amount"));
             String paymentMode = request.getParameter("paymentMode");
@@ -42,14 +40,17 @@ public class CollectFeeController extends HttpServlet {
 
             // Redirect based on success
             if (success) {
-                response.sendRedirect("CollectFee.jsp?status=success");
+                response.sendRedirect("CollectFee.jsp?success=true");
             } else {
-                response.sendRedirect("CollectFee.jsp?status=error");
+                response.sendRedirect("CollectFee.jsp?error=database");
             }
 
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect("CollectFee.jsp?error=invalid_input");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("CollectFee.jsp?status=error");
+            response.sendRedirect("CollectFee.jsp?error=server");
         }
     }
 }

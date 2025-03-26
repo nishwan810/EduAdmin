@@ -28,6 +28,8 @@ public class LoginValidateServlet extends HttpServlet {
 	        	response.sendRedirect("TeacherDashboard.jsp");
 	        } else if (loginName.equals("Student") && password.equals("p") && userType.equals("Student")) {
 	        	response.sendRedirect("StudentDashboard.jsp");
+	        }else if (loginName.equals("Accountant") && password.equals("p") && userType.equals("Accountant")) {
+	        	response.sendRedirect("AccountantDashboard.jsp");
 	        }else {
 	        	// If login fails, redirect to login page with an error message
 	        	request.setAttribute("errorMessage", "Invalid credentials! Please try again.");

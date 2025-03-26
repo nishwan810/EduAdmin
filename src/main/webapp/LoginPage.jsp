@@ -80,31 +80,7 @@ body {
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav me-auto">
-					<li class="nav-item"><a class="nav-link active text-white"
-						href="index.jsp">Home</a></li>
-
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"> Student </a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">Add Student</a></li>
-							<li><a class="dropdown-item" href="#">Display Student</a></li>
-
-						</ul></li>
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"> Staff </a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">Add Staff</a></li>
-							<li><a class="dropdown-item" href="#">Display Staff</a></li>
-
-						</ul></li>
-
-				</ul>
-			</div>
+			
 		</div>
 	</nav>
 
@@ -136,6 +112,7 @@ body {
 										<option value="">Select</option>
 										<option value="Admin">Admin</option>
 										<option value="Teacher">Teacher</option>
+										<option value="Accountant">Accountant</option>
 										<option value="Student">Student</option>
 									</select>
 								</div>

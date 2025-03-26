@@ -2,6 +2,7 @@
 <%@page import="java.util.List"%>
 <%@page import="com.engisphere.dao.StudentDao"%>
 <%@page import="com.engisphere.dao.DatabaseConnection"%>
+<%@page import="java.sql.Connection"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -15,81 +16,72 @@
     <style>
         .main-container {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 20px;
-            max-width: 1200px;
-            margin: 2rem auto;
+            min-height: 100vh;
+            max-width: 600px;
+            margin: 0 auto;
         }
+
         .message-container {
-            width: 300px;
+            width: 100%;
+            text-align: center;
         }
+
         .form-container {
-            flex: 1;
+            width: 100%;
+            max-width: 500px;
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             background-color: white;
-            height: fit-content;
         }
-        .form-title {
-            color: #2c3e50;
-            position: relative;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        .form-title:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 3px;
-            background: #4361ee;
-        }
+
         .form-label {
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-        .form-control, .form-select {
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 5px;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #4361ee;
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-        }
-        .submit-btn {
-            background-color: #4361ee;
-            border: none;
-            padding: 12px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: all 0.3s;
-        }
-        .submit-btn:hover {
-            background-color: #3a56d4;
-            transform: translateY(-2px);
-        }
-        .alert-success {
-            position: sticky;
-            top: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body class="bg-light">
     <div class="main-container">
-        <!-- Message Container (Left Side) -->
+        <!-- Message Container -->
         <div class="message-container">
-            <% if (request.getParameter("success") != null && request.getParameter("success").equals("true")) { %>
+            <%
+                String success = request.getParameter("success");
+                String error = request.getParameter("error");
+            %>
+            
+            <%-- Success Message --%>
+            <% if (success != null) { %>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     <strong>Success!</strong> Fee collected successfully.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <% } %>
+
+            <%-- Error Messages --%>
+            <% if (error != null) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Error:</strong> 
+                    <% if (error.equals("invalid_input")) { %>
+                        Invalid input! Please enter valid data.
+                    <% } else if (error.equals("database")) { %>
+                        Database error! Could not process the payment.
+                    <% } else if (error.equals("server")) { %>
+                        Server error! Please try again later.
+                    <% } else { %>
+                        An unknown error occurred.
+                    <% } %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
         </div>
 
-        <!-- Form Container (Right Side) -->
+        <!-- Form Container -->
         <div class="form-container">
             <h2 class="form-title">Collect Fees</h2>
 
@@ -102,14 +94,20 @@
                     <select class="form-select" id="studentId" name="studentId" required>
                         <option value="" selected disabled>-- Select Student --</option>
                         <%
-                            StudentDao studentDao = new StudentDao(DatabaseConnection.connect());
-                            List<StudentsEntities> studentsList = studentDao.getAllStudent();
-                            for (StudentsEntities student : studentsList) {
+                            try (Connection conn = DatabaseConnection.connect()) {
+                                StudentDao studentDao = new StudentDao(conn);
+                                List<StudentsEntities> studentsList = studentDao.getAllStudent();
+                                for (StudentsEntities student : studentsList) {
                         %>
                         <option value="<%= student.getId() %>">
                             <%= student.getFirstName() + " " + student.getLastName() + " (ID: " + student.getId() + ")" %>
                         </option>
-                        <% } %>
+                        <% 
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        %>
                     </select>
                 </div>
 
@@ -142,8 +140,8 @@
                     <input type="text" class="form-control" id="receiptNumber" name="receiptNumber" required>
                 </div>
 
-                <button type="submit" class="btn submit-btn w-100 mt-3">
-                    <i class="bi bi-check-circle me-2"></i>Collect Fee
+                <button type="submit" class="btn btn-primary submit-btn w-100 mt-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-check-circle me-2"></i> Collect Fee
                 </button>
             </form>
         </div>
@@ -161,4 +159,4 @@
         }, 5000);
     </script>
 </body>
-</html>
+</html> 

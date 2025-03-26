@@ -112,11 +112,12 @@ public class FeeDao {
             transactions.add(fee);
         }
         return transactions;
-    }
+    } 
+    
     public BigDecimal getTotalCollectedFees() {
         BigDecimal totalFees = BigDecimal.ZERO;
-        String query = "SELECT SUM(amount) FROM fees";
-        
+        String query = "SELECT SUM(amount) FROM fee_records";  // Ensure table name is correct
+
         try (PreparedStatement pst = conn.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
             if (rs.next()) {
@@ -128,8 +129,9 @@ public class FeeDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return totalFees;
     }
+
 
 }
