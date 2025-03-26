@@ -77,6 +77,16 @@ body {
 .absent {
 	color: red;
 }
+
+.clickable {
+	cursor: pointer;
+	text-decoration: underline;
+	color: blue;
+}
+
+.hidden {
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -244,33 +254,138 @@ body {
 			</div>
 
 			<!-- Total Present and Absent -->
-		<div class="row mt-4">
-    <div class="col-md-3">
-        <div class="stats-box">
-            <h2 class="present"><%=totalPresentStaff%></h2>
-            <p>Present Staff</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="stats-box">
-            <h2 class="absent"><%=totalAbsentStaff%></h2>
-            <p>Absent Staff</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="stats-box">
-            <h2 class="present"><%=totalPresentStudents%></h2>
-            <p>Present Students</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="stats-box">
-            <h2 class="absent"><%=totalAbsentStudents%></h2>
-            <p>Absent Students</p>
-        </div>
-    </div>
-</div>
+			<div class="row mt-4">
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="present"><%=totalPresentStaff%></h2>
+						<p>Present Staff</p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="absent"><%=totalAbsentStaff%></h2>
+						<p>Absent Staff</p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="present"><%=totalPresentStudents%></h2>
+						<p>Present Students</p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="stats-box">
+						<h2 class="absent"><%=totalAbsentStudents%></h2>
+						<p>Absent Students</p>
+					</div>
+				</div>
+			</div>
 
+
+			<%
+			// Fetch student and staff data from database
+			StudentDao sdao3 = new StudentDao(DatabaseConnection.connect());
+			List<StudentsEntities> studentsList = sdao3.getAllStudent();
+
+			StaffDao sdao2 = new StaffDao(DatabaseConnection.connect());
+			List<StaffEntities> staffList = sdao2.getAllStaff();
+			%>
+
+			<div class="container mt-4">
+				<!-- Button Group for Toggling Tables -->
+				<div class="d-flex justify-content-center gap-3 mb-4">
+					<button class="btn btn-primary"
+						onclick="toggleTable('studentCard')">Display Students</button>
+					<button class="btn btn-primary" onclick="toggleTable('staffCard')">Display
+						Staff</button>
+				</div>
+
+				<div class="row">
+					<!-- Student Table Card -->
+					<div class="col-md-6">
+						<div id="studentCard" class="card shadow-lg p-3 d-none">
+							<div class="text-center" style="color: #0056b3">
+								<h5>Student Table</h5>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table
+										class="table table-striped table-hover table-bordered text-center align-middle">
+										<thead class="table-dark">
+											<tr>
+												<th>Full Name</th>
+												<th>Course</th>
+											</tr>
+										</thead>
+										<tbody>
+											<%
+											for (StudentsEntities student : studentsList) {
+											%>
+											<tr>
+												<td><a
+													href="StudentDetailsController?id=<%=student.getId()%>"
+													class="text-primary fw-bold"> <%=student.getFirstName()%>
+														<%=student.getLastName()%>
+												</a></td>
+												<td><%=student.getCourse()%></td>
+											</tr>
+											<%
+											}
+											%>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Staff Table Card -->
+					<div class="col-md-6">
+						<div id="staffCard" class="card shadow-lg p-3 d-none">
+							<div class="text-center" style="color: #0056b3">
+								<h5>Staff Table</h5>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table
+										class="table table-striped table-hover table-bordered text-center align-middle">
+										<thead class="table-dark">
+											<tr>
+												<th>Full Name</th>
+												<th>Job Profession</th>
+											</tr>
+										</thead>
+										<tbody>
+											<%
+											for (StaffEntities staff : staffList) {
+											%>
+											<tr>
+												<td><a
+													href="ViewTeacherController?id=<%=staff.getId()%>"
+													class="text-primary fw-bold"> <%=staff.getFirstName()%>
+														<%=staff.getLastName()%>
+												</a></td>
+												<td><%=staff.getJobProfession()%></td>
+											</tr>
+											<%
+											}
+											%>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<script>
+				function toggleTable(tableId) {
+					let table = document.getElementById(tableId);
+					table.classList.toggle("d-none"); // Toggle visibility using Bootstrap's d-none class
+				}
+			</script>
 
 			<!-- Courses Section -->
 			<div class="courses mt-4">

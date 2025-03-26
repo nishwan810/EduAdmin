@@ -34,7 +34,14 @@
                         <li><a class="dropdown-item" href="DisplayStaff.jsp">Display Staff</a></li>
                     </ul>
                 </li>
-            </ul>
+
+
+				<li class="nav-item"><a class="nav-link"
+					href="SendNotification.jsp"> <i class="fas fa-bell"></i>
+						Notifications
+				</a></li>
+			</ul>
+
 
             <!-- Search Bar (Right-Aligned) -->
             <form class="d-flex ms-auto me-3">

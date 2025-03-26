@@ -258,4 +258,28 @@ public class StudentDao {
 		}
 		return attendanceList;
 	}
+	
+	public double getStudentAttendancePercentage(int studentId) {
+	    double percentage = 0.0;
+	    try {
+	        Connection con = DatabaseConnection.connect();
+	        String query = "SELECT COUNT(CASE WHEN status = 'Present' THEN 1 END) AS attended, COUNT(*) AS total FROM student_attendance WHERE student_id = ?";
+	        PreparedStatement pst = con.prepareStatement(query);
+	        pst.setInt(1, studentId);
+	        ResultSet rs = pst.executeQuery();
+	        
+	        if (rs.next()) {
+	            int attended = rs.getInt("attended");
+	            int total = rs.getInt("total");
+	            if (total > 0) {
+	                percentage = ((double) attended / total) * 100;
+	            }
+	        }
+	        con.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return percentage;
+	}
+
 }

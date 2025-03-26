@@ -1,3 +1,5 @@
+<%@page import="com.engisphere.dao.DatabaseConnection"%>
+<%@page import="com.engisphere.dao.StaffDao"%>
 <%@page import="com.engisphere.entity.StaffEntities"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -103,6 +105,13 @@ body {
 	opacity: 0.8;
 	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
 }
+
+.overall-attendance {
+	font-family: arial;
+	color: black;
+	
+	
+}
 </style>
 </head>
 <body>
@@ -110,10 +119,16 @@ body {
 	<%@include file="AdminNavBar.jsp"%>
 
 	<%
-    StaffEntities teacher = (StaffEntities) request.getAttribute("teacher");
+	StaffDao sdao = new StaffDao(DatabaseConnection.connect());
+	int staffId = Integer.parseInt(request.getParameter("id"));
+	double attendancePercentage = sdao.getStaffAttendancePercentage(staffId);
+	%>
 
-    if (teacher == null) {
-%>
+	<%
+	StaffEntities teacher = (StaffEntities) request.getAttribute("teacher");
+
+	if (teacher == null) {
+	%>
 	<div class="container">
 		<div class="alert alert-danger text-center" role="alert">
 			<h3>Teacher not found.</h3>
@@ -121,8 +136,8 @@ body {
 		</div>
 	</div>
 	<%
-    } else {
-%>
+	} else {
+	%>
 
 	<div class="container">
 		<div class="card">
@@ -138,42 +153,54 @@ body {
 			<div class="details">
 				<p>
 					<span>ID:</span>
-					<%= teacher.getId() %></p>
+					<%=teacher.getId()%></p>
 				<p>
 					<span>First Name:</span>
-					<%= teacher.getFirstName() %></p>
+					<%=teacher.getFirstName()%></p>
 				<p>
 					<span>Last Name:</span>
-					<%= teacher.getLastName() %></p>
+					<%=teacher.getLastName()%></p>
 				<p>
 					<span>Contact:</span>
-					<%= teacher.getContact() %></p>
+					<%=teacher.getContact()%></p>
 				<p>
 					<span>Address:</span>
-					<%= teacher.getAddress() %></p>
+					<%=teacher.getAddress()%></p>
 				<p>
 					<span>Email:</span>
-					<%= teacher.getEmail() %></p>
+					<%=teacher.getEmail()%></p>
 				<p>
 					<span>Joining Date:</span>
-					<%= teacher.getJoiningDate() %></p>
+					<%=teacher.getJoiningDate()%></p>
 				<p>
 					<span>Job Profession:</span>
-					<%= teacher.getJobProfession() %></p>
+					<%=teacher.getJobProfession()%></p>
 				<p>
 					<span>Salary:</span>
-					<%= teacher.getSalary() %></p>
+					<%=teacher.getSalary()%>$
+				</p>
 				<p>
 					<span>Work:</span>
-					<%= teacher.getWork() %></p>
+					<%=teacher.getWork()%></p>
+
+
+
+				<div class="stats-box">
+						<span class="overall-attendance">Overall Attendance : </span>
+						 <%=String.format("%.2f", attendancePercentage)%> %
+
+				
+
+				</div>
+
 			</div>
 			<a href="DisplayStaff.jsp" class="btn-back">Back to Staff List</a>
 		</div>
 	</div>
 
 	<%
-    }
-%>
+	}
+	%>
 
 </body>
 </html>

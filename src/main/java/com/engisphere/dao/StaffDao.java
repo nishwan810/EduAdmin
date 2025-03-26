@@ -70,7 +70,7 @@ public class StaffDao {
 						rs.getString("jobProfession"), 
 						rs.getString("salary"), 
 						rs.getString("work")
-						
+
 						);
 				staffList.add(staff);
 			}
@@ -168,33 +168,55 @@ public class StaffDao {
 
 	public StaffEntities getStaffById(int id) { 
 		StaffEntities teacher = null; 
-		
-	try
-	{ String query = "SELECT * FROM staffdata WHERE id=?"; 
-	PreparedStatement ps =con.prepareStatement(query);
-	ps.setInt(1, id);
-	ResultSet rs =ps.executeQuery(); 
-	if(rs.next()) { 
-		teacher = new StaffEntities(
-				rs.getInt("id"),
-				rs.getString("firstName"),
-				rs.getString("lastName"), 
-				rs.getString("contact"), 
-				rs.getString("address"),
-				rs.getString("email"), 
-				rs.getString("password"), 
-				rs.getString("joiningDate"),
-				rs.getString("jobProfession"), 
-				rs.getString("salary"), 
-				rs.getString("work")
+
+		try
+		{ String query = "SELECT * FROM staffdata WHERE id=?"; 
+		PreparedStatement ps =con.prepareStatement(query);
+		ps.setInt(1, id);
+		ResultSet rs =ps.executeQuery(); 
+		if(rs.next()) { 
+			teacher = new StaffEntities(
+					rs.getInt("id"),
+					rs.getString("firstName"),
+					rs.getString("lastName"), 
+					rs.getString("contact"), 
+					rs.getString("address"),
+					rs.getString("email"), 
+					rs.getString("password"), 
+					rs.getString("joiningDate"),
+					rs.getString("jobProfession"), 
+					rs.getString("salary"), 
+					rs.getString("work")
 
 
-			); }
+					); }
 
-	}catch (Exception e) { e.printStackTrace(); }
+		}catch (Exception e) { e.printStackTrace(); }
 
-	return teacher; }
+		return teacher; }
 
+	public double getStaffAttendancePercentage(int staffId) {
+		double percentage = 0.0;
+		try {
+			Connection con = DatabaseConnection.connect();
+			String query = "SELECT COUNT(CASE WHEN status = 'Present' THEN 1 END) AS attended, COUNT(*) AS total FROM staff_attendance WHERE staff_id = ?";
+			PreparedStatement pst = con.prepareStatement(query);
+			pst.setInt(1, staffId);
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				int attended = rs.getInt("attended");
+				int total = rs.getInt("total");
+				if (total > 0) {
+					percentage = ((double) attended / total) * 100;
+				}
+			}
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return percentage;
+	}
 
 
 }

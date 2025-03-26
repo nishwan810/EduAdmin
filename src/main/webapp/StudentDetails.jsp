@@ -1,3 +1,5 @@
+<%@page import="com.engisphere.dao.DatabaseConnection"%>
+<%@page import="com.engisphere.dao.StudentDao"%>
 <%@page import="com.engisphere.entity.StudentsEntities"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -97,7 +99,11 @@ body {
 <body>
 
 	<%@include file="AdminNavBar.jsp"%>
-
+					<%
+    StudentDao sdao = new StudentDao(DatabaseConnection.connect());
+    int studentId = Integer.parseInt(request.getParameter("id")); // Get student ID from request
+    double attendancePercentage = sdao.getStudentAttendancePercentage(studentId);
+%>
 	<%
 	StudentsEntities student = (StudentsEntities) request.getAttribute("student");
 
@@ -149,6 +155,11 @@ body {
 				<p>
 					<span>Course:</span>
 					<%=student.getCourse()%></p>
+
+				<div class="stats-box">
+					<span class="overall-attendance">Overall Attendance : </span> <%=String.format("%.2f", attendancePercentage)%> %
+				</div>
+
 			</div>
 			<a href="DisplayStudent.jsp" class="btn-back">Back to Student
 				List</a>
