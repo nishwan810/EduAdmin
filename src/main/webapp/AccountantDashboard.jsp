@@ -135,6 +135,64 @@
     </div>
 
 </div>
+<div class="mt-5 py-4">
+
+</div>
+
+<!-- Footer Section -->
+<footer class="footer mt-5 py-4 bg-light border-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center">
+     
+                    <div>
+                        <h5 class="mb-0">Engisphere Academy</h5>
+                        <small class="text-muted">Financial Management System</small>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-muted small">
+                    <i class="bi bi-geo-alt-fill me-2"></i>123 College Street, Pune, Maharashtra 411001
+                </p>
+            </div>
+            
+            <div class="col-md-3">
+                <h6 class="mb-3">Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="FinancialReports.jsp" class="text-decoration-none text-muted"><i class="bi bi-file-earmark-text me-2"></i>Reports</a></li>
+                    <li class="mb-2"><a href="CollectFee.jsp" class="text-decoration-none text-muted"><i class="bi bi-cash-coin me-2"></i>Fee Collection</a></li>
+                    <li><a href="ExpenseManagement.jsp" class="text-decoration-none text-muted"><i class="bi bi-credit-card me-2"></i>Expenses</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-md-3">
+                <h6 class="mb-3">Support</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-muted"><i class="bi bi-question-circle me-2"></i>Help Center</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-muted"><i class="bi bi-envelope me-2"></i>Contact Us</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-shield-lock me-2"></i>Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <hr class="my-4">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-0 small text-muted">
+                    &copy; 2023 Engisphere Academy. All rights reserved.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-muted me-3"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-muted me-3"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="text-muted me-3"><i class="bi bi-linkedin"></i></a>
+                <a href="#" class="text-muted"><i class="bi bi-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

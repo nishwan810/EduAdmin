@@ -54,4 +54,25 @@ public class NotificationDao {
         }
         return notificationList;
     }
+    
+    public List<NotificationEntity> getAllNotifications() {
+        List<NotificationEntity> notificationList = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM notifications ORDER BY created_at DESC";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                NotificationEntity notification = new NotificationEntity();
+                notification.setId(rs.getInt("id"));
+                notification.setMessage(rs.getString("message"));
+                notification.setUserType(rs.getString("user_type"));
+                notification.setCreatedAt(rs.getTimestamp("created_at"));
+                notificationList.add(notification);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return notificationList;
+    }
+
 }
